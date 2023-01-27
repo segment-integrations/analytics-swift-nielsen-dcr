@@ -15,6 +15,7 @@
 		46EDC71127C6B8D200B870D7 /* BasicExampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EDC71027C6B8D200B870D7 /* BasicExampleUITests.swift */; };
 		46EDC71327C6B8D200B870D7 /* BasicExampleUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EDC71227C6B8D200B870D7 /* BasicExampleUITestsLaunchTests.swift */; };
 		46EDC72127C6B92C00B870D7 /* Segment in Frameworks */ = {isa = PBXBuildFile; productRef = 46EDC72027C6B92C00B870D7 /* Segment */; };
+		EABB26E0297E9ED30076D4D7 /* SegmentNielsenDCR in Frameworks */ = {isa = PBXBuildFile; productRef = EABB26DF297E9ED30076D4D7 /* SegmentNielsenDCR */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +46,7 @@
 		46EDC70C27C6B8D200B870D7 /* BasicExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BasicExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		46EDC71027C6B8D200B870D7 /* BasicExampleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicExampleUITests.swift; sourceTree = "<group>"; };
 		46EDC71227C6B8D200B870D7 /* BasicExampleUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicExampleUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		EABB26DD297E9EC90076D4D7 /* analytics-swift-integration-nielsen-dcr */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "analytics-swift-integration-nielsen-dcr"; path = ../..; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +55,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				46EDC72127C6B92C00B870D7 /* Segment in Frameworks */,
+				EABB26E0297E9ED30076D4D7 /* SegmentNielsenDCR in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,10 +79,12 @@
 		46EDC6E927C6B8D100B870D7 = {
 			isa = PBXGroup;
 			children = (
+				EABB26DC297E9EC90076D4D7 /* Packages */,
 				46EDC6F427C6B8D100B870D7 /* BasicExample */,
 				46EDC70527C6B8D200B870D7 /* BasicExampleTests */,
 				46EDC70F27C6B8D200B870D7 /* BasicExampleUITests */,
 				46EDC6F327C6B8D100B870D7 /* Products */,
+				EABB26DE297E9ED30076D4D7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -129,6 +134,21 @@
 			path = BasicExampleUITests;
 			sourceTree = "<group>";
 		};
+		EABB26DC297E9EC90076D4D7 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				EABB26DD297E9EC90076D4D7 /* analytics-swift-integration-nielsen-dcr */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		EABB26DE297E9ED30076D4D7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -147,6 +167,7 @@
 			name = BasicExample;
 			packageProductDependencies = (
 				46EDC72027C6B92C00B870D7 /* Segment */,
+				EABB26DF297E9ED30076D4D7 /* SegmentNielsenDCR */,
 			);
 			productName = BasicExample;
 			productReference = 46EDC6F227C6B8D100B870D7 /* BasicExample.app */;
@@ -604,6 +625,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 46EDC71F27C6B92C00B870D7 /* XCRemoteSwiftPackageReference "analytics-swift" */;
 			productName = Segment;
+		};
+		EABB26DF297E9ED30076D4D7 /* SegmentNielsenDCR */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SegmentNielsenDCR;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
