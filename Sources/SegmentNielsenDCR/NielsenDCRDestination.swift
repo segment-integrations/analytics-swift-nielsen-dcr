@@ -158,7 +158,6 @@ private extension NielsenDCRDestination {
     
     func returnCustomSectionProperty(properties: [String: Any], defaultKey: String) -> String {
         var value = ""
-//TODO: need to default case with android
         if let customKey = defaultSettings.integrations?.dictionaryValue?["customSectionProperty"] as? String {
             let customSectionName = properties[customKey] as? String
             if customKey.count > 0 && (customSectionName != nil) {
@@ -173,12 +172,7 @@ private extension NielsenDCRDestination {
         return value
     }
     
-    //TODO: need to default case with android
     func returnFullEpisodeStatus(src: [String: Any], key: String)-> String {
-//        let value = src[key] as? NSNumber
-//        if value == true {
-//            return "y"
-//        }
         let value = src[key] as? Bool
         if value == true {
             return "y"
@@ -281,7 +275,6 @@ private extension NielsenDCRDestination {
         var mutableContentMetadata: [String: Any] = contentMetadata
         if (defaultSettings.integrations?.dictionaryValue?["subbrandPropertyName"] != nil) {
             let subbrandValue = properties[defaultSettings.integrations?.dictionaryValue?["subbrandPropertyName"] as? String ?? ""] ?? ""
-            debugPrint("subbrandValue", subbrandValue)
             mutableContentMetadata["subbrand"] = subbrandValue
         }
 
@@ -390,8 +383,10 @@ private extension NielsenDCRDestination {
             // In case of ad `type` preroll, call `loadMetadata` with metadata values for content, followed by `loadMetadata` with ad (preroll) metadata
             
             if properties["type"] as? String == "pre-roll" {
-                let contentProperties = properties["content"] as? String
-                let adContentMetadata = returnMappedContentProperties(properties: properties, options: options)
+                guard let contentProperties = properties["content"] as? [String: Any] else {
+                    return
+                }
+                let adContentMetadata = returnMappedContentProperties(properties: contentProperties, options: options)
                 nielsenAppApi.loadMetadata(adContentMetadata)
                 analytics?.log(message: "NielsenAppApi loadMetadata: \(adContentMetadata)")
             }
