@@ -448,6 +448,15 @@ private extension NielsenDCRDestination {
     }
 }
 
+extension NielsenDCRDestination: VersionedPlugin {
+    public static func version() -> String {
+        return __destination_version
+    }
+}
+
+private struct NielsenSettings: Codable {
+    let appId: String
+    let contentAssetIdPropertyName: String
     let customSectionProperty: String
     let subbrandPropertyName: String
     let adAssetIdPropertyName: String
