@@ -34,10 +34,10 @@ import AVKit
 public class NielsenDCRDestination: DestinationPlugin {
     public let timeline = Timeline()
     public let type = PluginType.destination
-    public let key = "nielsen-dcr"
+    public let key = "Nielsen DCR"
     public var analytics: Analytics? = nil
     
-    private var NielsenSettings: NielsenSettings?
+    private var nielsenSettings: NielsenSettings?
     
     let avPlayerViewController = AVPlayerViewController()
     var avPlayer:AVPlayer?
@@ -55,14 +55,15 @@ public class NielsenDCRDestination: DestinationPlugin {
         // Grab the settings and assign them for potential later usage.
         // Note: Since integrationSettings is generic, strongly type the variable.
         guard let tempSettings: NielsenSettings = settings.integrationSettings(forPlugin: self) else { return }
-        NielsenSettings = tempSettings
+        nielsenSettings = tempSettings
         defaultSettings = settings
-        nielsenAppApi = NielsenAppApi(appInfo: tempSettings.apiKey, delegate: nil)
+        nielsenAppApi = NielsenAppApi(appInfo: tempSettings.appId, delegate: nil)
     }
     
     public func track(event: TrackEvent) -> TrackEvent? {
         
-        if let options = event.integrations?.dictionaryValue?["nielsen-dcr"] as? [String: Any], let properties = event.properties?.dictionaryValue {
+        if let options = event.integrations?.dictionaryValue?[key] as? [String: Any],
+           let properties = event.properties?.dictionaryValue {
             trackPlayBackEvents(event: event, options: options, properties: properties)
         }
     
@@ -70,33 +71,22 @@ public class NielsenDCRDestination: DestinationPlugin {
     }
     
     public func screen(event: ScreenEvent) -> ScreenEvent? {
+        let options = event.integrations?.dictionaryValue?[key] as? [String : Any] ?? nil
+        let properties = event.properties?.dictionaryValue ?? [:]
+        let metaData: [String: Any] = [
+            "type" : "static",
+            "assetid" : returnCustomContentAssetId(properties: properties, defaultKey: "asset_id"),
+            "section" : returnCustomSectionProperty(properties: properties, defaultKey: event.name ?? ""),
+            "segA" : (options != nil) ? options?["segA"] ?? "" : "",
+            "segB" : (options != nil) ? options?["segB"] ?? "" : "",
+            "segC" : (options != nil) ? options?["segC"] ?? "" : "",
+            "crossId1" : (options != nil) ? options?["crossId1"] ?? "" : ""
+        ]
         
-        if let options = event.integrations?.dictionaryValue?["nielsen-dcr"] as? [String: Any], let properties = event.properties?.dictionaryValue {
-            let metaData: [String: Any] = [
-                "type" : "static",
-                "assetid" : returnCustomContentAssetId(properties: properties, defaultKey: "asset_id"),
-                "section" : returnCustomSectionProperty(properties: properties, defaultKey: event.name ?? ""),
-                "segA" : options["segA"] ?? "",
-                "segB" : options["segB"] ?? "",
-                "segC" : options["segC"] ?? "",
-                "crossId1" : options["crossId1"] ?? ""
-            ]
-            nielsenAppApi.loadMetadata(metaData)
-            analytics?.log(message: "Load Screen metadata - \(metaData)")
-        }
-        
+        nielsenAppApi.loadMetadata(metaData)
+        analytics?.log(message: "Load Screen metadata - \(metaData)")
         return event
     }
-}
-
-extension NielsenDCRDestination: VersionedPlugin {
-    public static func version() -> String {
-        return __destination_version
-    }
-}
-
-private struct NielsenSettings: Codable {
-    let apiKey: String
 }
 
 private extension NielsenDCRDestination {
@@ -125,11 +115,11 @@ private extension NielsenDCRDestination {
     }
     
     func returnCustomAdAssetId(properties: [String: Any], defaultKey: String)-> String {
-        let customKey = defaultSettings.integrations?.dictionaryValue?["adAssetIdPropertyName"] as? String
+        let customKey = nielsenSettings?.adAssetIdPropertyName ?? ""
         var value = ""
-        let customAssetId = properties[customKey ?? ""] as? String
-        if (customKey?.count ?? 0 > 0) && (customAssetId != nil) {
-            value = properties[customKey ?? ""] as? String ?? ""
+        let customAssetId = properties[customKey] as? String
+        if (customKey.count > 0) && (customAssetId != nil) {
+            value = properties[customKey] as? String ?? ""
         } else if properties[defaultKey] != nil {
             value = properties[defaultKey] as? String ?? ""
         } else{
@@ -141,16 +131,14 @@ private extension NielsenDCRDestination {
     
     func returnCustomContentAssetId(properties: [String: Any], defaultKey: String) -> String {
         var value = ""
-
-        if let customKey = defaultSettings.integrations?.dictionaryValue?["contentAssetIdPropertyName"] as? String {
-            let customContentAssetId = properties[customKey] as? String
-            if customKey.count > 0 && (customContentAssetId != nil) {
-                value = properties[customKey] as? String ?? ""
-            } else if properties[defaultKey] != nil {
-                value = properties[defaultKey] as? String ?? ""
-            } else {
-                value = ""
-            }
+        let customKey = nielsenSettings?.contentAssetIdPropertyName ?? ""
+        let customContentAssetId = properties[customKey] as? String
+        if customKey.count > 0 && (customContentAssetId != nil) {
+            value = properties[customKey] as? String ?? ""
+        } else if properties[defaultKey] != nil {
+            value = properties[defaultKey] as? String ?? ""
+        } else {
+            value = ""
         }
         
         return value
@@ -158,17 +146,16 @@ private extension NielsenDCRDestination {
     
     func returnCustomSectionProperty(properties: [String: Any], defaultKey: String) -> String {
         var value = ""
-        if let customKey = defaultSettings.integrations?.dictionaryValue?["customSectionProperty"] as? String {
-            let customSectionName = properties[customKey] as? String
-            if customKey.count > 0 && (customSectionName != nil) {
-                value = properties[customKey] as? String ?? ""
-            } else if defaultKey != "" {
-                value = defaultKey
-            } else {
-                value = "Unknown"
-            }
+        let customKey = nielsenSettings?.customSectionProperty ?? ""
+        let customSectionName = properties[customKey] as? String
+        if customKey.count > 0 && (customSectionName != nil) {
+            value = properties[customKey] as? String ?? ""
+        } else if defaultKey != "" {
+            value = defaultKey
+        } else {
+            value = "Unknown"
         }
-        
+            
         return value
     }
     
@@ -208,7 +195,7 @@ private extension NielsenDCRDestination {
     }
 
     func returnContentLength(src: [String: Any], defaultKey: String)-> String {
-        let contentLengthKey = defaultSettings.integrations?.dictionaryValue?["contentLengthPropertyName"] as? String ?? ""
+        let contentLengthKey = nielsenSettings?.contentLengthPropertyName ?? ""
         var contentLength = ""
         let customContentLength = src[contentLengthKey]
         if (contentLengthKey.count > 0) && (customContentLength != nil) {
@@ -273,13 +260,13 @@ private extension NielsenDCRDestination {
         ]
         
         var mutableContentMetadata: [String: Any] = contentMetadata
-        if (defaultSettings.integrations?.dictionaryValue?["subbrandPropertyName"] != nil) {
-            let subbrandValue = properties[defaultSettings.integrations?.dictionaryValue?["subbrandPropertyName"] as? String ?? ""] ?? ""
+        if (nielsenSettings?.subbrandPropertyName != nil) {
+            let subbrandValue = properties[nielsenSettings?.subbrandPropertyName ?? ""]
             mutableContentMetadata["subbrand"] = subbrandValue
         }
 
-        if (defaultSettings.integrations?.dictionaryValue?["clientIdPropertyName"] != nil) {
-            let clientIdValue = properties[defaultSettings.integrations?.dictionaryValue?["clientIdPropertyName"] as? String ?? ""] ?? ""
+        if (nielsenSettings?.clientIdPropertyName != nil) {
+            let clientIdValue = properties[nielsenSettings?.clientIdPropertyName ?? ""]
             mutableContentMetadata["clientid"] = clientIdValue
         }
         
@@ -321,8 +308,8 @@ private extension NielsenDCRDestination {
         }
         
         if event.event == "Video Playback Resumed" ||
-        event.event == "Video Playback Seek Completed" ||
-        event.event == "Video Playback Buffer Completed" {
+            event.event == "Video Playback Seek Completed" ||
+            event.event == "Video Playback Buffer Completed" {
             let channelInfo: [String: Any] = [
                 // channelName is optional for DCR, if not present Nielsen asks to set default
                 "channelName" : options["channelName"] ?? "defaultChannelName",
@@ -337,10 +324,10 @@ private extension NielsenDCRDestination {
         }
         
         if event.event == "Video Playback Paused" ||
-        event.event == "Video Playback Seek Started" ||
-        event.event == "Video Playback Buffer Started" ||
-        event.event == "Video Playback Interrupted" ||
-        event.event == "Video Playback Exited" {
+            event.event == "Video Playback Seek Started" ||
+            event.event == "Video Playback Buffer Started" ||
+            event.event == "Video Playback Interrupted" ||
+            event.event == "Video Playback Exited" {
             stopPlayheadTimer(trackEvent: event)
             nielsenAppApi.stop()
             analytics?.log(message: "NielsenAppApi stop")
@@ -434,7 +421,7 @@ private extension NielsenDCRDestination {
             var position: Int64 = 0
             position = trackEvent.properties?.dictionaryValue?["position"] as? Int64 ?? 0
             let currentTime = Int64(Date().timeIntervalSince1970)
-            if defaultSettings.integrations?.dictionaryValue?["sendCurrentTimeLivestream"] as? Bool == true {
+            if ((nielsenSettings?.sendCurrentTimeLivestream) != nil) == true {
                 //for livestream, if this setting is enabled just send the curent time
                 playheadPosition = currentTime
             } else {
@@ -461,3 +448,20 @@ private extension NielsenDCRDestination {
     }
 }
 
+extension NielsenDCRDestination: VersionedPlugin {
+    public static func version() -> String {
+        return __destination_version
+    }
+}
+
+private struct NielsenSettings: Codable {
+    let appId: String
+    let contentAssetIdPropertyName: String
+    let customSectionProperty: String
+    let subbrandPropertyName: String
+    let adAssetIdPropertyName: String
+    let contentLengthPropertyName: String
+    let clientIdPropertyName: String
+    let sendCurrentTimeLivestream: String
+    let assetIdPropertyName: String
+}
