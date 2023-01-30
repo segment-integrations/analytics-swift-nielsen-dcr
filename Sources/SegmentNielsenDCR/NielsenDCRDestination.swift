@@ -39,12 +39,12 @@ public class NielsenDCRDestination: DestinationPlugin {
     
     private var nielsenSettings: NielsenSettings?
     
-    let avPlayerViewController = AVPlayerViewController()
-    var avPlayer:AVPlayer?
-    var nielsenAppApi: NielsenAppApi!
-    var defaultSettings: Settings!
-    var startingPlayheadPosition: Int64!
-    var playheadTimer: Timer!
+    private let avPlayerViewController = AVPlayerViewController()
+    private var avPlayer:AVPlayer?
+    private var nielsenAppApi: NielsenAppApi!
+    private var defaultSettings: Settings!
+    private var startingPlayheadPosition: Int64!
+    private var playheadTimer: Timer!
         
     public init() { }
 
