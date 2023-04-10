@@ -31,6 +31,11 @@ import Segment
 import NielsenAppApi
 import AVKit
 
+@objc(SEGNielsenDCRDestination)
+public class ObjCSegmentNielsenDCR: NSObject, ObjCDestination, ObjCDestinationShim {
+    public func instance() -> DestinationPlugin { return NielsenDCRDestination() }
+}
+
 public class NielsenDCRDestination: DestinationPlugin {
     public let timeline = Timeline()
     public let type = PluginType.destination
