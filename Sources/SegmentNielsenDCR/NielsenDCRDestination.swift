@@ -89,7 +89,6 @@ public class NielsenDCRDestination: DestinationPlugin {
         ]
         
         nielsenAppApi.loadMetadata(metaData)
-        analytics?.log(message: "Load Screen metadata - \(metaData)")
         return event
     }
 }
@@ -305,10 +304,8 @@ private extension NielsenDCRDestination {
             ]
             let contentMetadata = returnMappedContentProperties(properties: properties, options: options)
             nielsenAppApi.loadMetadata(contentMetadata)
-            analytics?.log(message: "NielsenAppApi loadMetadata - \(contentMetadata)")
             startPlayheadTimer(trackEvent: event)
             nielsenAppApi.play(channelInfo)
-            analytics?.log(message: "NielsenAppApi play: \(channelInfo)")
             return
         }
         
@@ -324,7 +321,6 @@ private extension NielsenDCRDestination {
             
             startPlayheadTimer(trackEvent: event)
             nielsenAppApi.play(channelInfo)
-            analytics?.log(message: "NielsenAppApi play: \(channelInfo)")
             return
         }
         
@@ -335,14 +331,12 @@ private extension NielsenDCRDestination {
             event.event == "Video Playback Exited" {
             stopPlayheadTimer(trackEvent: event)
             nielsenAppApi.stop()
-            analytics?.log(message: "NielsenAppApi stop")
             return
         }
         
         if event.event == "Video Playback Completed" {
             stopPlayheadTimer(trackEvent: event)
             nielsenAppApi.end()
-            analytics?.log(message: "NielsenAppApi end")
             return
         }
         
@@ -351,7 +345,6 @@ private extension NielsenDCRDestination {
         if event.event == "Video Content Started" {
             let contentMetadata = returnMappedContentProperties(properties: properties, options: options)
             nielsenAppApi.loadMetadata(contentMetadata)
-            analytics?.log(message: "NielsenAppApi loadMetadata: \(contentMetadata)")
             startPlayheadTimer(trackEvent: event)
             return
         }
@@ -380,11 +373,9 @@ private extension NielsenDCRDestination {
                 }
                 let adContentMetadata = returnMappedContentProperties(properties: contentProperties, options: options)
                 nielsenAppApi.loadMetadata(adContentMetadata)
-                analytics?.log(message: "NielsenAppApi loadMetadata: \(adContentMetadata)")
             }
             
             nielsenAppApi.loadMetadata(adMetadata)
-            analytics?.log(message: "NielsenAppApi loadMetadata: \(adMetadata)")
             startPlayheadTimer(trackEvent: event)
             return
         }
@@ -416,7 +407,6 @@ private extension NielsenDCRDestination {
     @objc func playHeadTimeEvent(timer: Timer) {
         startingPlayheadPosition = startingPlayheadPosition + 1
         nielsenAppApi.playheadPosition(startingPlayheadPosition)
-        analytics?.log(message: "NielsenAppApi playheadPosition: \(String(describing: startingPlayheadPosition))")
     }
     
     func returnPlayheadPosition(trackEvent: TrackEvent)-> Int64 {
@@ -444,7 +434,6 @@ private extension NielsenDCRDestination {
     func stopPlayheadTimer(trackEvent: TrackEvent) {
         DispatchQueue.main.async {
             self.nielsenAppApi.playheadPosition(self.startingPlayheadPosition)
-            self.analytics?.log(message: "NielsenAppApi playheadPosition: \(String(describing: self.startingPlayheadPosition))")
             if (self.playheadTimer != nil) {
                 self.playheadTimer.invalidate()
                 self.playheadTimer = nil
