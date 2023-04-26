@@ -32,8 +32,8 @@ import NielsenAppApi
 import AVKit
 
 @objc(SEGNielsenDCRDestination)
-public class ObjCSegmentNielsenDCR: NSObject, ObjCDestination, ObjCDestinationShim {
-    public func instance() -> DestinationPlugin { return NielsenDCRDestination() }
+public class ObjCSegmentNielsenDCR: NSObject, ObjCPlugin, ObjCPluginShim {
+    public func instance() -> EventPlugin { return NielsenDCRDestination() }
 }
 
 public class NielsenDCRDestination: DestinationPlugin {
