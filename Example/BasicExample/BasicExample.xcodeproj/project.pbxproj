@@ -46,7 +46,7 @@
 		46EDC70C27C6B8D200B870D7 /* BasicExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BasicExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		46EDC71027C6B8D200B870D7 /* BasicExampleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicExampleUITests.swift; sourceTree = "<group>"; };
 		46EDC71227C6B8D200B870D7 /* BasicExampleUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicExampleUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		EABB26DD297E9EC90076D4D7 /* analytics-swift-integration-nielsen-dcr */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "analytics-swift-integration-nielsen-dcr"; path = ../..; sourceTree = "<group>"; };
+		EABB26DD297E9EC90076D4D7 /* analytics-swift-nielsen-dcr */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "analytics-swift-nielsen-dcr"; path = ../..; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,7 +137,7 @@
 		EABB26DC297E9EC90076D4D7 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				EABB26DD297E9EC90076D4D7 /* analytics-swift-integration-nielsen-dcr */,
+				EABB26DD297E9EC90076D4D7 /* analytics-swift-nielsen-dcr */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
