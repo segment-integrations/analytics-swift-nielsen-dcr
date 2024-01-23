@@ -1,10 +1,10 @@
 # Analytics-Swift Nielsen-DCR
 
-Add Nielsen-DCR session tracking support to your applications via this plugin for [Analytics-Swift](https://github.com/segmentio/analytics-swift)
-
-Note that this plugin simply adds session data for Nielsen-DCR, and events are sent via Cloud Mode.
+Add `Neilsen-DCR` Device Mode support to your applications via this plugin for [Analytics-Swift](https://github.com/segmentio/analytics-swift).
 
 ## Adding the dependency
+
+***Note:*** the `Nielsen-DCR` library itself will be installed as an additional dependency.
 
 ### via Xcode
 In the Xcode `File` menu, click `Add Packages`.  You'll see a dialog where you can search for Swift packages.  In the search field, enter the URL to this repo.
@@ -43,7 +43,7 @@ let analytics = Analytics(configuration: Configuration(writeKey: "<YOUR WRITE KE
                     .trackApplicationLifecycleEvents(true))
 analytics.add(plugin: NielsenDCRDestination())
 ```
-Your events will now be given Nielsen-DCR session data and start flowing to Nielsen-DCR via Cloud Mode.
+Your events will now be given Nielsen-DCR session data and start flowing to Nielsen-DCR via Device Mode.
 
 
 ## Support
